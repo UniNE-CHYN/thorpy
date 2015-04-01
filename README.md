@@ -3,6 +3,8 @@
 Python library implementing Thorlabs APT communication protocol
 
 ## License
+
+```
 Thorpy - Python library implementing Thorlabs APT communication protocol
 Copyright (C) 2015 Laurent Fasnacht, University of Neuchâtel
 
@@ -17,3 +19,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+```
