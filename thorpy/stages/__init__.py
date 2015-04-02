@@ -286,83 +286,83 @@ class GenericStage:
         
     
     @property
-    def state_position(self):
+    def position(self):
         self._wait_for_properties(('_state_position', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return self._state_position / self._EncCnt
     
-    @state_position.setter
-    def state_position(self, new_value):
+    @position.setter
+    def position(self, new_value):
         assert type(new_value) in (float, int)
         absolute_distance = int(new_value * self._EncCnt)
         self._port.send_message(MGMSG_MOT_MOVE_ABSOLUTE_long(chan_ident = self._chan_ident, absolute_distance = absolute_distance))
     
     @property
-    def state_velocity(self):
+    def velocity(self):
         self._wait_for_properties(('_state_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return self._state_velocity / (self._EncCnt * self._T)  #Dropped the 65536 factor, which resulted in false results
 
     @property
-    def state_forward_hardware_limit_switch_active(self):
+    def status_forward_hardware_limit_switch_active(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000001) != 0
 
     @property
-    def state_reverse_hardware_limit_switch_active(self):
+    def status_reverse_hardware_limit_switch_active(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000002) != 0
     
     @property
-    def state_in_motion_forward(self):
+    def status_in_motion_forward(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000010) != 0
     
     @property
-    def state_in_motion_reverse(self):
+    def status_in_motion_reverse(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000020) != 0
     
     @property
-    def state_in_motion_jogging_forward(self):
+    def status_in_motion_jogging_forward(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000040) != 0
     
     @property
-    def state_in_motion_jogging_reverse(self):
+    def status_in_motion_jogging_reverse(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000080) != 0
     
     @property
-    def state_in_motion_homing(self):
+    def status_in_motion_homing(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000200) != 0
     
     @property
-    def state_homed(self):
+    def status_homed(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000400) != 0
     
     @property
-    def state_tracking(self):
+    def status_tracking(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00001000) != 0
     
     @property
-    def state_settled(self):
+    def status_settled(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00002000) != 0
     
     @property
-    def state_motion_error(self):
+    def status_motion_error(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00004000) != 0
     
     @property
-    def state_motor_current_limit_reached(self):
+    def status_motor_current_limit_reached(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x01000000) != 0
     
     @property
-    def state_channel_enabled(self):
+    def status_channel_enabled(self):
         self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x80000000) != 0
     
@@ -380,37 +380,37 @@ class GenericStage:
     
     def print_state(self):
         print("Stage: {0}".format(self._name))
-        print("Position: {0:0.03f}{1}".format(self.state_position, self.units))
-        print("Velocity: {0:0.03f}{1}/s".format(self.state_velocity, self.units))
+        print("Position: {0:0.03f}{1}".format(self.position, self.units))
+        print("Velocity: {0:0.03f}{1}/s".format(self.velocity, self.units))
         
         flags = []
-        if self.state_forward_hardware_limit_switch_active:
+        if self.status_forward_hardware_limit_switch_active:
             flags.append("forward hardware limit switch is active")
-        if self.state_reverse_hardware_limit_switch_active:
+        if self.status_reverse_hardware_limit_switch_active:
             flags.append("reverse hardware limit switch is active")
-        if self.state_in_motion_forward or self.state_in_motion_reverse or self.state_in_motion_jogging_forward or self.state_in_motion_jogging_reverse or self.state_in_motion_homing:
+        if self.status_in_motion_forward or self.status_in_motion_reverse or self.status_in_motion_jogging_forward or self.status_in_motion_jogging_reverse or self.status_in_motion_homing:
             flags.append('in motion')
-        if self.state_in_motion_forward:
+        if self.status_in_motion_forward:
             flags.append('moving forward')
-        if self.state_in_motion_reverse:
+        if self.status_in_motion_reverse:
             flags.append('moving reverse')
-        if self.state_in_motion_jogging_forward:
+        if self.status_in_motion_jogging_forward:
             flags.append('jogging forward')
-        if self.state_in_motion_jogging_reverse:
+        if self.status_in_motion_jogging_reverse:
             flags.append('jogging reverse')
-        if self.state_in_motion_homing:
+        if self.status_in_motion_homing:
             flags.append('homing')
-        if self.state_homed:
+        if self.status_homed:
             flags.append('homed')
-        if self.state_tracking:
+        if self.status_tracking:
             flags.append('tracking')
-        if self.state_settled:
+        if self.status_settled:
             flags.append('settled')
-        if self.state_motion_error:
+        if self.status_motion_error:
             flags.append('motion error')
-        if self.state_motor_current_limit_reached:
+        if self.status_motor_current_limit_reached:
             flags.append('motor current limit reached')
-        if self.state_channel_enabled:
+        if self.status_channel_enabled:
             flags.append('channel enabled')
             
         print("Status: {0}".format(', '.join(flags)))
@@ -421,11 +421,11 @@ class GenericStage:
         
     def home(self, force = False):
         self._wait_for_status()
-        if self.state_homed and not force:
+        if self.status_homed and not force:
             return True
         
-        while not self.state_homed:
-            if not self.state_in_motion_forward and not self.state_in_motion_reverse:
+        while not self.status_homed:
+            if not self.status_in_motion_forward and not self.status_in_motion_reverse:
                 self._port.send_message(MGMSG_MOT_MOVE_HOME(chan_ident = self._chan_ident))
             time.sleep(1)
             
