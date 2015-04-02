@@ -82,7 +82,7 @@ class GenericStage:
         self._port = port
         self._chan_ident = chan_ident
         self._config = configparser.ConfigParser()
-        self._config.read_string(pkgutil.get_data('thorpy.stages','MG17APTServer.ini'))
+        self._config.read_string(pkgutil.get_data('thorpy.stages','MG17APTServer.ini').decode('ascii'))
         
         self._name = ini_section
         
