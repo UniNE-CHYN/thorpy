@@ -174,6 +174,7 @@ class GenericStage:
     def _handle_message(self, msg):
         if self._last_ack_sent < time.time() - 0.5:
             self._port.send_message(MGMSG_MOT_ACK_DCSTATUSUPDATE())
+            self._last_ack_sent = time.time()
             
         if isinstance(msg, MGMSG_MOT_GET_DCSTATUSUPDATE) or \
            isinstance(msg, MGMSG_MOT_GET_STATUSUPDATE) or \
