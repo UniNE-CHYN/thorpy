@@ -287,8 +287,7 @@ class GenericStage:
     
     @property
     def state_position(self):
-        if self._state_position is None:
-            return None
+        self._wait_for_properties(('_state_position', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return self._state_position / self._EncCnt
     
     @state_position.setter
@@ -299,86 +298,72 @@ class GenericStage:
     
     @property
     def state_velocity(self):
-        if self._state_velocity is None:
-            return None
+        self._wait_for_properties(('_state_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return self._state_velocity / (self._EncCnt * self._T)  #Dropped the 65536 factor, which resulted in false results
 
     @property
     def state_forward_hardware_limit_switch_active(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000001) != 0
 
     @property
     def state_reverse_hardware_limit_switch_active(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000002) != 0
     
     @property
     def state_in_motion_forward(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000010) != 0
     
     @property
     def state_in_motion_reverse(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000020) != 0
     
     @property
     def state_in_motion_jogging_forward(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000040) != 0
     
     @property
     def state_in_motion_jogging_reverse(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000080) != 0
     
     @property
     def state_in_motion_homing(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000200) != 0
     
     @property
     def state_homed(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00000400) != 0
     
     @property
     def state_tracking(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00001000) != 0
     
     @property
     def state_settled(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00002000) != 0
     
     @property
     def state_motion_error(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x00004000) != 0
     
     @property
     def state_motor_current_limit_reached(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x01000000) != 0
     
     @property
     def state_channel_enabled(self):
-        if self._state_status_bits is None:
-            return None
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
         return (self._state_status_bits & 0x80000000) != 0
     
     @property
