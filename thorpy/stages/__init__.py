@@ -1,6 +1,7 @@
 from thorpy.message import *
 import weakref
 import time
+import pkgutil
 
 def _print_stage_detection_improve_message(m):
     import sys
@@ -81,7 +82,7 @@ class GenericStage:
         self._port = port
         self._chan_ident = chan_ident
         self._config = configparser.ConfigParser()
-        self._config.read([os.path.join(os.path.dirname(__file__), 'MG17APTServer.ini')])
+        self._config.read_string(pkgutil.get_data('thorpy.stages','MG17APTServer.ini'))
         
         self._name = ini_section
         
