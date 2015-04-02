@@ -18,6 +18,7 @@ class Port:
         self._unhandled_messages = queue.Queue()
         self._serial = serial.Serial(port, 115200, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
         self._port = port
+        self._debug = False
         
         from ..message import MGMSG_HW_NO_FLASH_PROGRAMMING, MGMSG_HW_REQ_INFO, MGMSG_HW_START_UPDATEMSGS, MGMSG_HW_STOP_UPDATEMSGS
         self.send_message(MGMSG_HW_NO_FLASH_PROGRAMMING(source = 0x01, dest = 0x50))
@@ -64,6 +65,8 @@ class Port:
             
     def send_message(self, msg):
         with self._lock:
+            if self._debug:
+                print('> ', msg)
             self._serial.write(msg.bytes)
             
     @staticmethod
@@ -133,6 +136,8 @@ class Port:
             
             self._buffer = self._buffer[len(msg):]
             
+            if self._debug:
+                print('< ', msg)
             return msg
         
     @property
