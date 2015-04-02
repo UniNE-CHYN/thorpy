@@ -205,6 +205,91 @@ class GenericStage:
         
         return False
     
+    #STATUSUPDATE
+    
+    @property
+    def position(self):
+        self._wait_for_properties(('_state_position', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return self._state_position / self._EncCnt
+
+    @position.setter
+    def position(self, new_value):
+        assert type(new_value) in (float, int)
+        absolute_distance = int(new_value * self._EncCnt)
+        self._port.send_message(MGMSG_MOT_MOVE_ABSOLUTE_long(chan_ident = self._chan_ident, absolute_distance = absolute_distance))
+
+    @property
+    def velocity(self):
+        self._wait_for_properties(('_state_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return self._state_velocity / (self._EncCnt * self._T)  #Dropped the 65536 factor, which resulted in false results
+
+    @property
+    def status_forward_hardware_limit_switch_active(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000001) != 0
+
+    @property
+    def status_reverse_hardware_limit_switch_active(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000002) != 0
+
+    @property
+    def status_in_motion_forward(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000010) != 0
+
+    @property
+    def status_in_motion_reverse(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000020) != 0
+
+    @property
+    def status_in_motion_jogging_forward(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000040) != 0
+
+    @property
+    def status_in_motion_jogging_reverse(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000080) != 0
+
+    @property
+    def status_in_motion_homing(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000200) != 0
+
+    @property
+    def status_homed(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00000400) != 0
+
+    @property
+    def status_tracking(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00001000) != 0
+
+    @property
+    def status_settled(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00002000) != 0
+
+    @property
+    def status_motion_error(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x00004000) != 0
+
+    @property
+    def status_motor_current_limit_reached(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x01000000) != 0
+
+    @property
+    def status_channel_enabled(self):
+        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
+        return (self._state_status_bits & 0x80000000) != 0
+    
+    #VELPARAMS
+    
     @property
     def min_velocity(self):
         self._wait_for_properties(('_state_min_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_VELPARAMS(chan_ident = self._chan_ident))
@@ -219,6 +304,34 @@ class GenericStage:
     def acceleration(self):
         self._wait_for_properties(('_state_acceleration', ), timeout = 3, message = MGMSG_MOT_REQ_VELPARAMS(chan_ident = self._chan_ident))
         return self._state_acceleration / (self._EncCnt * (self._T ** 2) * 65536)
+    
+    @min_velocity.setter
+    def min_velocity(self, new_value):
+        self._set_velparams(float(new_value), self.max_velocity, self.acceleration)
+
+    @max_velocity.setter
+    def max_velocity(self, new_value):
+        self._set_velparams(self.min_velocity, float(new_value), self.acceleration)
+
+    @acceleration.setter
+    def acceleration(self, new_value):
+        self._set_velparams(self.min_velocity, self.max_velocity, float(new_value))
+
+    def _set_velparams(self, min_velocity, max_velocity, acceleration):
+        msg = MGMSG_MOT_SET_VELPARAMS(
+            chan_ident = self._chan_ident,
+            min_velocity = int(min_velocity *(self._EncCnt * self._T * 65536)),
+            max_velocity = int(max_velocity *(self._EncCnt * self._T * 65536)),
+            acceleration = int(acceleration *(self._EncCnt * (self._T ** 2) * 65536)),
+        )
+        self._port.send_message(msg)
+        #Invalidate current values
+        self._state_min_velocity = None
+        self._state_max_velocity = None
+        self._state_acceleration = None
+        
+        
+    #HOMEPARAMS
     
     @property
     def home_velocity(self):
@@ -244,31 +357,6 @@ class GenericStage:
         self._wait_for_properties(('_state_home_offset_distance', ), timeout = 3, message = MGMSG_MOT_REQ_HOMEPARAMS(chan_ident = self._chan_ident))
         return self._state_home_offset_distance / self._EncCnt
     
-    @min_velocity.setter
-    def min_velocity(self, new_value):
-        self._set_velparams(float(new_value), self.max_velocity, self.acceleration)
-        
-    @max_velocity.setter
-    def max_velocity(self, new_value):
-        self._set_velparams(self.min_velocity, float(new_value), self.acceleration)
-        
-    @acceleration.setter
-    def acceleration(self, new_value):
-        self._set_velparams(self.min_velocity, self.max_velocity, float(new_value))
-        
-    def _set_velparams(self, min_velocity, max_velocity, acceleration):
-        msg = MGMSG_MOT_SET_VELPARAMS(
-            chan_ident = self._chan_ident,
-            min_velocity = int(min_velocity *(self._EncCnt * self._T * 65536)),
-            max_velocity = int(max_velocity *(self._EncCnt * self._T * 65536)),
-            acceleration = int(acceleration *(self._EncCnt * (self._T ** 2) * 65536)),
-        )
-        self._port.send_message(msg)
-        #Invalidate current values
-        self._state_min_velocity = None
-        self._state_max_velocity = None
-        self._state_acceleration = None
-        
     def _set_homeparams(self, home_velocity, home_direction, home_limit_switch, home_offset_distance):
         msg = MGMSG_MOT_SET_HOMEPARAMS( 
             chan_ident = self._chan_ident,
@@ -278,94 +366,14 @@ class GenericStage:
             offset_distance = int(home_offset_distance*self._EncCnt)
         )
         self._port.send_message(msg)
-        
+        #Invalidate current values
         self._state_home_velocity = None
         self._state_home_direction = None
         self._state_home_limit_switch = None
         self._state_home_offset_distance = None
-        
-    
-    @property
-    def position(self):
-        self._wait_for_properties(('_state_position', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return self._state_position / self._EncCnt
-    
-    @position.setter
-    def position(self, new_value):
-        assert type(new_value) in (float, int)
-        absolute_distance = int(new_value * self._EncCnt)
-        self._port.send_message(MGMSG_MOT_MOVE_ABSOLUTE_long(chan_ident = self._chan_ident, absolute_distance = absolute_distance))
-    
-    @property
-    def velocity(self):
-        self._wait_for_properties(('_state_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return self._state_velocity / (self._EncCnt * self._T)  #Dropped the 65536 factor, which resulted in false results
 
-    @property
-    def status_forward_hardware_limit_switch_active(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000001) != 0
-
-    @property
-    def status_reverse_hardware_limit_switch_active(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000002) != 0
     
-    @property
-    def status_in_motion_forward(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000010) != 0
-    
-    @property
-    def status_in_motion_reverse(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000020) != 0
-    
-    @property
-    def status_in_motion_jogging_forward(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000040) != 0
-    
-    @property
-    def status_in_motion_jogging_reverse(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000080) != 0
-    
-    @property
-    def status_in_motion_homing(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000200) != 0
-    
-    @property
-    def status_homed(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00000400) != 0
-    
-    @property
-    def status_tracking(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00001000) != 0
-    
-    @property
-    def status_settled(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00002000) != 0
-    
-    @property
-    def status_motion_error(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x00004000) != 0
-    
-    @property
-    def status_motor_current_limit_reached(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x01000000) != 0
-    
-    @property
-    def status_channel_enabled(self):
-        self._wait_for_properties(('_state_status_bits', ), timeout = 3, message = MGMSG_MOT_REQ_DCSTATUSUPDATE(chan_ident = self._chan_ident))
-        return (self._state_status_bits & 0x80000000) != 0
-    
+    #Conversion factors
     @property
     def _EncCnt(self):
         return self._conf_steps_per_rev * self._conf_gearbox_ratio / self._conf_pitch
@@ -420,7 +428,6 @@ class GenericStage:
         print("Homing parameters: velocity: {0.home_velocity:0.3f}{0.units}/s, direction: {0.home_direction}, limit_switch: {0.home_limit_switch}, offset_distance: {0.home_offset_distance:0.3f}{0.units}".format(self))
         
     def home(self, force = False):
-        self._wait_for_status()
         if self.status_homed and not force:
             return True
         
@@ -431,9 +438,6 @@ class GenericStage:
             
             
         return True
-    
-    def _wait_for_status(self, timeout = None):
-        return self._wait_for_properties(['_state_position', '_state_status_bits', '_state_velocity'], timeout)
             
     def _wait_for_properties(self, properties, timeout = None, message = None, message_repeat_timeout = None):
         start_time = time.time()
@@ -447,7 +451,7 @@ class GenericStage:
             if timeout is not None and time.time() - start_time >= timeout:
                 return False
         return True
-            
+        
     def __repr__(self):
         return '<{0} on {1!r} channel {2}>'.format(self._name, self._port, self._chan_ident)
         
