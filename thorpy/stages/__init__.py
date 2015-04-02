@@ -224,6 +224,10 @@ class GenericStage:
     def home_velocity(self):
         self._wait_for_properties(('_state_home_velocity', ), timeout = 3, message = MGMSG_MOT_REQ_HOMEPARAMS(chan_ident = self._chan_ident))
         return self._state_home_velocity / (self._EncCnt * self._T * 65536)
+    
+    @home_velocity.setter
+    def home_velocity(self, new_value):
+        self._set_homeparams(float(new_value), self.home_direction, self.home_limit_switch, self.home_offset_distance)
 
     @property
     def home_direction(self):
@@ -264,6 +268,21 @@ class GenericStage:
         self._state_min_velocity = None
         self._state_max_velocity = None
         self._state_acceleration = None
+        
+    def _set_homeparams(self, home_velocity, home_direction, home_limit_switch, home_offset_distance):
+        msg = MGMSG_MOT_SET_HOMEPARAMS( 
+            chan_ident = self._chan_ident,
+            home_velocity = int(home_velocity *(self._EncCnt * self._T * 65536)),
+            home_direction = home_direction,
+            limit_switch = home_limit_switch,
+            offset_distance = int(home_offset_distance*self._EncCnt)
+        )
+        self._port.send_message(msg)
+        
+        self._state_home_velocity = None
+        self._state_home_direction = None
+        self._state_home_limit_switch = None
+        self._state_home_offset_distance = None
         
     
     @property
