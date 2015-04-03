@@ -12,27 +12,29 @@ class MGMSG_MOD_IDENTIFY(MessageWithoutData):
 class MGMSG_MOD_SET_CHANENABLESTATE(MessageWithoutData):
     """Sent to enable or disable the specified drive channel.
     
-    Fields:
-    - chan_ident (0x01, 0x02)
-    - chan_enable_state (0x01: enable, 0x02: disable)"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int 
+    :param chan_enable_state: is channel enabled (0x01: enable, 0x02: disable)
+    :type chan_enable_state: int"""
     
     message_id = 0x0210
     _params_names = ['message_id'] + ['chan_ident', 'chan_enable_state'] + ['dest', 'source']
 
 class MGMSG_MOD_REQ_CHANENABLESTATE(MessageWithoutData):
-    """See MGMSG_MOD_SET_CHANENABLESTATE
+    """See :class:`MGMSG_MOD_SET_CHANENABLESTATE`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0211
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOD_GET_CHANENABLESTATE(MessageWithoutData):
-    """See MGMSG_MOD_SET_CHANENABLESTATE
+    """See :class:`MGMSG_MOD_SET_CHANENABLESTATE`.
     
-    Fields:
-    - chan_ident
-    - chan_enable_state"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param chan_enable_state: is channel enabled (0x01: enable, 0x02: disable)
+    :type chan_enable_state: int"""
     message_id = 0x0212
     _params_names = ['message_id'] + ['chan_ident', 'chan_enable_state'] + ['dest', 'source']
 
@@ -52,19 +54,28 @@ class MGMSG_HW_RESPONSE(MessageWithoutData):
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
 class MGMSG_HW_RICHRESPONSE(MessageWithData):
-    """Similarly to HW_RESPONSE, this message is s ent by the
+    """Similarly to :class:`MGMSG_HW_RESPONSE`, this message is sent by the
     controllers to notify APT Server of some event that requires user
     intervention, usually some fault or error condition that needs to be
     handled before normal operation can resume. However unlike
-    HW_RESPONSE, this message also transmits a printable text string.
+    :class:`MGMSG_HW_RESPONSE`, this message also transmits a printable text string.
     Upon receiving the message, APT Server displays both the numerical
     value and the text information, which is useful in finding the cause
     of the problem.
     
-    Fields:
-    - msg_ident
-    - code
-    - notes"""
+    :param msg_ident: If the message is sent in response to an APT message, these
+        bytes show the APT message number that evoked the
+        message. Most often though the message is transmitted as
+        a result of some unexpected fault condition, in which case
+        these bytes are 0x00, 0x00
+    :type msg_ident: int
+    :param code: This is an internal Thorlabs specific code that specifies the
+        condition that has caused the message (see Return Codes).
+    :type code: int
+    :param notes: This is a zero-terminated printable (ascii) text string that
+        contains the textual information about the condition that
+        has occurred. For example: “Hardware Time Out Error”.
+    :type notes: string"""
     
     message_id = 0x0081
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', '64s']
@@ -76,11 +87,12 @@ class MGMSG_HW_START_UPDATEMSGS(MessageWithoutData):
     update messages contain information about the position and status
     of the controller (for example limit switch status, motion indication,
     etc). The messages will be sent by the controller periodically until it
-    receives a STOP STATUS UPDATE MESSAGES command. In
+    receives a :class:`MGMSG_HW_STOP_UPDATEMSGS` command. In
     applications where spontaneous messages (i.e. messages which are
     not received as a response to a specific command) must be avoided
     the same information can also be obtained by using the relevant
-    GET_STATUTSUPDATES function."""
+    :class:`~thorpy.message.motorcontrol.MGMSG_MOT_GET_STATUSUPDATE` or
+    :class:`~thorpy.message.motorcontrol.MGMSG_MOT_GET_DCSTATUSUPDATE` message."""
     message_id = 0x0011
     _params_names = ['message_id'] + ['update_rate', None] + ['dest', 'source']
 
@@ -98,17 +110,35 @@ class MGMSG_HW_REQ_INFO(MessageWithoutData):
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
 class MGMSG_HW_GET_INFO(MessageWithData):
-    """See MGMSG_HW_REQ_INFO.
+    """See :class:`MGMSG_HW_REQ_INFO`.
     
-    Fields:
-    - serial_number
-    - model_number
-    - type
-    - firmware_version
-    - notes
-    - hw_version
-    - mod_state
-    - nchs
+    :param serial_number: unique 8-digit serial number
+    :type serial_number: int
+    :param model_number: alphanumeric model number
+    :type: model_number: string
+    :param type: hardware type (not really documented)
+    :type type: int
+    :param firmware_version: firmware version
+        
+        - byte 0 = minor revision number
+        - byte 1 = interim revision number
+        - byte 2 = major revision number
+        - byte 3 = unused
+
+    :type firmware_version: bytes
+    :param notes: arbitrary alphanumeric information string (48 bytes)
+    :type notes: string
+    :param empty_space: ironically, not an empty space. Contain undocumented
+        information which helps identifying the connected stage. See
+        :func:`~thorpy.stages.stage_name_from_get_hw_info` for the reversed
+        engineered algorithm.
+    :type empty_space: bytes
+    :param hw_version: the hardware version number
+    :type hw_version: int
+    :param mod_state: the modification state of the hardware
+    :type mod_state: int
+    :param nchs: number of channels
+    :type nchs: int
     """
     message_id = 0x0006
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['I', '8s', 'H', '4s', '48s', '12s', 'H', 'H', 'H']
@@ -119,17 +149,19 @@ class MGMSG_RACK_REQ_BAYUSED(MessageWithoutData):
     """Sent to determine whether the specified bay in the controller is
     occupied.
     
-    Fields:
-    - bay_ident"""
+    :param bay_ident: bay identifier (0x01 to 0x09, for bay 1 to bay 9)
+    :type bay_ident: int
+    """
     message_id = 0x0060
     _params_names = ['message_id'] + ['bay_ident', None] + ['dest', 'source']
 
 class MGMSG_RACK_GET_BAYUSED(MessageWithoutData):
-    """See MGMSG_RACK_REQ_BAYUSED
+    """See :class:`MGMSG_RACK_REQ_BAYUSED`.
     
-    Fields:
-    - bay_ident
-    - bay_state"""
+    :param bay_ident: bay identifier (0x01 to 0x09, for bay 1 to bay 9)
+    :type bay_ident: int
+    :param bay_state: bay state (0x01: occopied, 0x02: empty, unused)
+    :type bay_state: int"""
     
     message_id = 0x0061
     _params_names = ['message_id'] + ['bay_ident', 'bay_state'] + ['dest', 'source']
@@ -140,10 +172,10 @@ class MGMSG_HUB_REQ_BAYUSED(MessageWithoutData):
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
 class MGMSG_HUB_GET_BAYUSED(MessageWithoutData):
-    """See MGMSG_HUB_REQ_BAYUSED.
+    """See :class:`MGMSG_HUB_REQ_BAYUSED`.
     
-    Fields:
-    - bay_ident
+    :param bay_ident: bay identifier (0x01 to 0x06, for bay 1 to bay 6)
+    :type bay_ident: int
     """
     message_id = 0x0066
     _params_names = ['message_id'] + ['bay_ident', None] + ['dest', 'source']
@@ -162,13 +194,19 @@ class MGMSG_RACK_REQ_STATUSBITS(MessageWithoutData):
     development. The individual bits (flags) of the 32 bit integer value
     correspond to digital output state.
     
-    Fields:
-    - status_bits"""
+    :param status_bits: The status bits for the associated controller channel.
+        
+        - bit 1: Digital output 1 state (1 - logic high, 0 - logic low).
+        - bit 2: Digital output 1 state (1 - logic high, 0 - logic low).
+        - bit 3: Digital output 1 state (1 - logic high, 0 - logic low).
+        - bit 4: Digital output 1 state (1 - logic high, 0 - logic low).
+
+    :type status_bits: int"""
     message_id = 0x0226
     _params_names = ['message_id'] + ['status_bits', None] + ['dest', 'source']
 
 class MGMSG_RACK_GET_STATUSBITS(MessageWithData):
-    """See MGMSG_RACK_REQ_STATUSBITS"""
+    """See :class:`MGMSG_RACK_REQ_STATUSBITS`."""
     message_id = 0x0227
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['I']
@@ -188,23 +226,23 @@ class MGMSG_RACK_SET_DIGOUTPUTS(MessageWithoutData):
     development. The individual bits (flags) of the 32 bit integer value
     are described below.
     
-    Fields:
-    - dig_op"""
+    .. todo::
+        Not sure exactly how it behaves. Fix if we have access to the hardware!
     
-    #FIXME: Doc is likely to be WRONG. Fix this definition!
+    :param dig_op:
+    :type dig_op: int"""
+    
     message_id = 0x0228
     _params_names = ['message_id'] + ['dig_op', None] + ['dest', 'source']
 
 class MGMSG_RACK_REQ_DIGOUTPUTS(MessageWithoutData):
-    """See MGMSG_RACK_SET_DIGOUTPUTS"""
+    """See :class:`MGMSG_RACK_SET_DIGOUTPUTS`."""
     message_id = 0x0229
-    #FIXME: Doc is likely to be WRONG. Fix this definition!
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
 class MGMSG_RACK_GET_DIGOUTPUTS:
-    """See MGMSG_RACK_SET_DIGOUTPUTS"""
+    """See :class:`MGMSG_RACK_SET_DIGOUTPUTS`."""
     message_id = 0x0230
-    #FIXME: Doc is likely to be WRONG. Fix this definition!
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
 class MGMSG_MOD_SET_DIGOUTPUTS(MessageWithoutData):
@@ -213,18 +251,24 @@ class MGMSG_MOD_SET_DIGOUTPUTS(MessageWithoutData):
     on the type of unit. This message is used to configure these digital
     outputs.
     
-    Fields:
-    - bits"""
+    :param bits:
+    :type bits: int"""
     message_id = 0x0213
     _params_names = ['message_id'] + ['bits', None] + ['dest', 'source']
 
 class MGMSG_MOD_REQ_DIGOUTPUTS(MessageWithoutData):
-    """See MGMSG_MOD_SET_DIGOUTPUTS"""
+    """See :class:`MGMSG_MOD_SET_DIGOUTPUTS`.
+    
+    :param bits:
+    :type bits: int"""
     message_id = 0x0214
     #FIXME: Fix this definition, is bits really required here?
     _params_names = ['message_id'] + ['bits', None] + ['dest', 'source']
 
 class MGMSG_MOD_GET_DIGOUTPUTS:
-    """See MGMSG_MOD_SET_DIGOUTPUTS"""
+    """See :class:`MGMSG_MOD_SET_DIGOUTPUTS`.
+    
+    :param bits:
+    :type bits: int"""
     message_id = 0x0215
     _params_names = ['message_id'] + ['bits', None] + ['dest', 'source']

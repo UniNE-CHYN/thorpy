@@ -6,8 +6,8 @@ class MGMSG_MOT_SET_MFF_OPERPARAMS(MessageWithData):
     """Used to set various operating parameters that dictate the function of the
     MFF series flipper unit.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - i_transit_time
     - i_transit_time_adc
     - oper_mode_1
@@ -24,19 +24,19 @@ class MGMSG_MOT_SET_MFF_OPERPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))        
 
 class MGMSG_MOT_REQ_MFF_OPERPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_MFF_OPERPARAMS.
+    """See :class:`MGMSG_MOT_SET_MFF_OPERPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x0511
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_MFF_OPERPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_MFF_OPERPARAMS.
+    """See :class:`MGMSG_MOT_SET_MFF_OPERPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - i_transit_time
     - i_transit_time_adc
     - oper_mode_1

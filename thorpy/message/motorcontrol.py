@@ -25,31 +25,35 @@ class MGMSG_MOT_SET_POSCOUNTER(MessageWithData):
     updated to show the actual position. From this point onwards the
     position counter always shows the actual absolute position.
     
-    Fields:
-    - chan_ident
-    - position"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param position: The new value of the position counter. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type position: int"""
     message_id = 0x0410
-    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I']
+    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'position']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_POSCOUNTER(MessageWithoutData):
-    """See MGMSG_MOT_SET_POSCOUNTER
+    """See :class:`MGMSG_MOT_SET_POSCOUNTER`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x0411
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_POSCOUNTER(MessageWithData):
-    """See MGMSG_MOT_SET_POSCOUNTER
+    """See :class:`MGMSG_MOT_SET_POSCOUNTER`.
 
-    Fields:
-    - chan_ident
-    - position"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param position: The value of the position counter. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type position: int"""
     message_id = 0x0412
-    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I']
+    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'position']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
     
@@ -66,35 +70,37 @@ class MGMSG_MOT_SET_ENCCOUNTER(MessageWithData):
     onwards the encoder counter always shows the actual absolute
     position.
     
-    Fields:
-    - chan_ident
-    - encoder_count
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param encoder_count: The new value of the encoder counter.
+    :type encoder_count: int
     """
     message_id = 0x0409
-    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I']
+    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'encoder_count']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
     
 
 class MGMSG_MOT_REQ_ENCCOUNTER(MessageWithoutData):
-    """See MGMSG_MOT_SET_ENCCOUNTER
+    """See :class:`MGMSG_MOT_SET_ENCCOUNTER`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x040A
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_ENCCOUNTER(MessageWithData):
-    """See MGMSG_MOT_SET_ENCCOUNTER
+    """See :class:`MGMSG_MOT_SET_ENCCOUNTER`.
     
-    Fields:
-    - chan_ident
-    - enc_counter
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param encoder_count: The new value of the encoder counter.
+    :type encoder_count: int
     """
     
     message_id = 0x040B
-    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I']
+    _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'encoder_count']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
@@ -108,11 +114,17 @@ class MGMSG_MOT_SET_VELPARAMS(MessageWithData):
     For stepper motor controllers the velocity is set in microsteps/sec
     and acceleration is set in microsteps/sec/sec.
     
-    Fields:
-    - chan_ident
-    - min_velocity
-    - acceleration
-    - max_velocity
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param min_velocity: The minimum (start) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type min_velocity: int
+    :param acceleration: The acceleration. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type acceleration: int
+    :param max_velocity: The maxium (final) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type max_velocity: int
     """
     message_id = 0x0413
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I', 'I', 'I']
@@ -121,23 +133,29 @@ class MGMSG_MOT_SET_VELPARAMS(MessageWithData):
     
 
 class MGMSG_MOT_REQ_VELPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_VELPARAMS
+    """See :class:`MGMSG_MOT_SET_VELPARAMS`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     """
     
     message_id = 0x0414
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_VELPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_VELPARAMS
+    """See :class:`MGMSG_MOT_SET_VELPARAMS`.
 
-    Fields:
-    - chan_ident
-    - min_velocity
-    - acceleration
-    - max_velocity
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param min_velocity: The minimum (start) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type min_velocity: int
+    :param acceleration: The acceleration. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type acceleration: int
+    :param max_velocity: The maxium (final) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type max_velocity: int
     """    
     message_id = 0x0415
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'I', 'I', 'I']
@@ -150,44 +168,64 @@ class MGMSG_MOT_SET_JOGPARAMS(MessageWithData):
     channel, For DC servo controllers, values set in encoder counts.
     For stepper motor controllers the values is set in microsteps.
     
-    Fields:
-    - chan_ident
-    - jog_mode
-    - jog_step_size
-    - jog_min_velocity
-    - jog_acceleration
-    - job_max_velocity
-    - stop_mode
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param jog_mode: continuous (0x01) or single step (0x02) jogging.
+    :type jog_mode: int
+    :param jog_step_size: The jog step size. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_step_size: int
+    :param jog_min_velocity: The minimum (start) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_min_velocity: int
+    :param jog_acceleration: The acceleration. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_acceleration: int
+    :param jog_max_velocity: The maxium (final) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_max_velocity: int
+    :param jog_stop_mode: abrupt stop (0x01) or profiled stop (0x02).
+    :type jog_stop_mode: int
     """
     message_id = 0x0416
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', 'I', 'I', 'I', 'I', 'H']
-    _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'jog_mode', 'jog_step_size', 'jog_min_velocity', 'jog_acceleration', 'job_max_velocity', 'stop_mode']
+    _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'jog_mode', 'jog_step_size', 'jog_min_velocity', 'jog_acceleration', 'jog_max_velocity', 'jog_stop_mode']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields)) 
 
 class MGMSG_MOT_REQ_JOGPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_JOGPARAMS
+    """See :class:`MGMSG_MOT_SET_JOGPARAMS`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     """
     message_id = 0x0417
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_JOGPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_JOGPARAMS
+    """See :class:`MGMSG_MOT_SET_JOGPARAMS`.
 
-    Fields:
-    - chan_ident
-    - jog_mode
-    - jog_step_size
-    - jog_min_velocity
-    - jog_acceleration
-    - job_max_velocity
-    - stop_mode
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param jog_mode: continuous (0x01) or single step (0x02) jogging.
+    :type jog_mode: int
+    :param jog_step_size: The jog step size. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_step_size: int
+    :param jog_min_velocity: The minimum (start) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_min_velocity: int
+    :param jog_acceleration: The acceleration. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_acceleration: int
+    :param jog_max_velocity: The maxium (final) velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type jog_max_velocity: int
+    :param jog_stop_mode: abrupt stop (0x01) or profiled stop (0x02).
+    :type jog_stop_mode: int
     """    
     message_id = 0x0418
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', 'I', 'I', 'I', 'I', 'H']
-    _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'jog_mode', 'jog_step_size', 'jog_min_velocity', 'jog_acceleration', 'job_max_velocity', 'stop_mode']
+    _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'jog_mode', 'jog_step_size', 'jog_min_velocity', 'jog_acceleration', 'jog_max_velocity', 'jog_stop_mode']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields)) 
 
 class MGMSG_MOT_REQ_ADCINPUTS(MessageWithoutData):
@@ -201,18 +239,21 @@ class MGMSG_MOT_REQ_ADCINPUTS(MessageWithoutData):
     application. When the signal reaches a specified value, the
     application could instigate further actions, such as a motor move.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x042B
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_ADCINPUTS(MessageWithData):
-    """See MGMSG_MOT_REQ_ADCINPUTS
+    """See :class:`MGMSG_MOT_REQ_ADCINPUTS`.
 
-    Fields:
-    - chan_ident
-    - adc_input1
-    - adc_input2"""    
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param adc_input1: The voltage state of the analog input pin, in the range 0 to
+        32768, which corresponds to zero to 5 V.
+    :type adc_input2: int
+    :param adc_input2: Not used.
+    :type adc_input2: int"""
     message_id = 0x042C
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['adc_input1', 'adc_input2']
@@ -237,10 +278,14 @@ class MGMSG_MOT_SET_POWERPARAMS(MessageWithData):
     The command MGMSG_MOT_REQ_POWERPARAMS will return the default values or the
     values that were set.
     
-    Fields:
-    - chan_ident
-    - rest_factor
-    - move_factor
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param rest_factor: The phase power value when the motor is at rest, in the
+        range 1 to 100 (i.e. 1% to 100% of full power).
+    :type rest_factor: int
+    :param move_factor: The phase power value when the motor is moving, in the
+        range 1 to 100 (i.e. 1% to 100% of full power).
+    :type move_factor: int
     """
     message_id = 0x0426
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', 'H']
@@ -248,20 +293,24 @@ class MGMSG_MOT_SET_POWERPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))     
 
 class MGMSG_MOT_REQ_POWERPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_GET_POWERPARAMS.
+    """See :class:`MGMSG_MOT_GET_POWERPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0427
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_POWERPARAMS(MessageWithData):
-    """See MGMSG_MOT_GET_POWERPARAMS.
+    """See :class:`MGMSG_MOT_GET_POWERPARAMS`.
 
-    Fields:
-    - chan_ident
-    - rest_factor
-    - move_factor"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param rest_factor: The phase power value when the motor is at rest, in the
+        range 1 to 100 (i.e. 1% to 100% of full power).
+    :type rest_factor: int
+    :param move_factor: The phase power value when the motor is moving, in the
+        range 1 to 100 (i.e. 1% to 100% of full power).
+    :type move_factor: int"""
     message_id = 0x0428
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', 'H']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'rest_factor', 'move_factor']
@@ -272,9 +321,11 @@ class MGMSG_MOT_SET_GENMOVEPARAMS(MessageWithData):
     """Used to set the general move parameters for the specified motor
     channel. At this time this refers specifically to the backlash settings.
     
-    Fields:
-    - chan_ident
-    - backlash_distance
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param backlash_distance: The value of the backlash distance. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type backlash_distance: int
     """
     message_id = 0x043A
     
@@ -283,19 +334,21 @@ class MGMSG_MOT_SET_GENMOVEPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))
 
 class MGMSG_MOT_REQ_GENMOVEPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_GENMOVEPARAMS
+    """See :class:`MGMSG_MOT_SET_GENMOVEPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x043B
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
     
 class MGMSG_MOT_GET_GENMOVEPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_GENMOVEPARAMS
+    """See :class:`MGMSG_MOT_SET_GENMOVEPARAMS`.
 
-    Fields:
-    - chan_ident
-    - backlash_distance"""    
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param backlash_distance: The value of the backlash distance. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type backlash_distance: int"""    
     message_id = 0x043C
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -309,9 +362,11 @@ class MGMSG_MOT_SET_MOVERELPARAMS(MessageWithData):
     move distance itself. This gets stored by the controller and is used
     the next time a relative move is initiated.
     
-    Fields:
-    - chan_ident
-    - relative_distance"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param relative_distance: The distance to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type relative_distance: int"""
     
     message_id = 0x0445
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -319,20 +374,22 @@ class MGMSG_MOT_SET_MOVERELPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))        
 
 class MGMSG_MOT_REQ_MOVERELPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_MOVERELPARAMS
+    """See :class:`MGMSG_MOT_SET_MOVERELPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x0446
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_MOVERELPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_MOVERELPARAMS
+    """See :class:`MGMSG_MOT_SET_MOVERELPARAMS`.
 
-    Fields:
-    - chan_ident
-    - relative_distance"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param relative_distance: The distance to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type relative_distance: int"""
     message_id = 0x0447
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -345,9 +402,11 @@ class MGMSG_MOT_SET_MOVEABSPARAMS(MessageWithData):
     move position itself. This gets stored by the controller and is used
     the next time an absolute move is initiated.
     
-    Fields:
-    - chan_ident
-    - absolute_position"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param absolute_position: The absolute position to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type absolute_position: int"""
     message_id = 0x0450
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -355,20 +414,22 @@ class MGMSG_MOT_SET_MOVEABSPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))                
 
 class MGMSG_MOT_REQ_MOVEABSPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_MOVEABSPARAMS.
+    """See :class:`MGMSG_MOT_SET_MOVEABSPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0451
     
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_MOVEABSPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_MOVEABSPARAMS.
+    """See :class:`MGMSG_MOT_SET_MOVEABSPARAMS`.
 
-    Fields:
-    - chan_ident
-    - absolute_position"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param absolute_position: The absolute position to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type absolute_position: int"""
     message_id = 0x0452
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -382,12 +443,18 @@ class MGMSG_MOT_SET_HOMEPARAMS(MessageWithData):
     implementation the only parameter that can be changed is the
     homing velocity.
     
-    Fields:
-    - chan_ident
-    - home_direction
-    - limit_switch
-    - home_velocity
-    - offset_distance
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param home_direction: Ignored in current implementation (0x01=forward, 0x02=reverse)
+    :type home_direction: int
+    :param limit_switch: Ignored in current implementation
+    :type limit_switch: int
+    :param home_velocity: The homing velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type home_velocity: int
+    :param offset_distance: Not used in current implementation. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type offset_distance: int
     """
     message_id = 0x0440
     
@@ -396,23 +463,29 @@ class MGMSG_MOT_SET_HOMEPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_HOMEPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_GET_HOMEPARAMS.
+    """See :class:`MGMSG_MOT_GET_HOMEPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x0441
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_HOMEPARAMS(MessageWithData):
-    """See MGMSG_MOT_GET_HOMEPARAMS.
+    """See :class:`MGMSG_MOT_GET_HOMEPARAMS`.
 
-    Fields:
-    - chan_ident
-    - home_direction
-    - limit_switch
-    - home_velocity
-    - offset_distance
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param home_direction: Ignored in current implementation (0x01=forward, 0x02=reverse)
+    :type home_direction: int
+    :param limit_switch: Ignored in current implementation
+    :type limit_switch: int
+    :param home_velocity: The homing velocity. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type home_velocity: int
+    :param offset_distance: Not used in current implementation. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type offset_distance: int
     """
     
     message_id = 0x0442
@@ -427,13 +500,31 @@ class MGMSG_MOT_SET_LIMSWITCHPARAMS(MessageWithData):
     
     These functions are not applicable to BBD10x units
     
-    Fields:
-    - chan_ident
-    - cw_hard_limit
-    - ccw_hard_limit
-    - cw_soft_limit
-    - ccw_soft_limit
-    - software_limit_mode
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param cw_hard_limit: The operation of the Clockwise hardware limit switch when
+        contact is made. If value is OR'd with 0x80, then swap cw_hard_limit and
+        ccw_hard_limit.
+        
+        Values:
+        
+        - 0x01: Ignore switch or switch not present.
+        - 0x02: Switch makes on contact.
+        - 0x03: Switch breaks on contact.
+        - 0x04: Switch makes on contact - only used for homes (e.g. limit switched rotation stages).
+        - 0x05: Switch breaks on contact - only used for homes (e.g. limit switched rotations stages).
+        - 0x06 For PMD based brushless servo controllers only - uses index mark for homing.
+        
+    :type cw_hard_limit: int
+    :param ccw_hard_limit: The operation of the Counter Clockwise hardware limit
+        switch when contact is made.
+    :type ccw_hard_limit: int
+    :param cw_soft_limit: Clockwise software limit in position steps. Not applicable to TDC001.
+    :type cw_soft_limit: int
+    :param ccw_soft_limit: Counter Clockwise software limit in position steps. Not applicable to TDC001.
+    :type ccw_soft_limit: int
+    :param software_limit_mode: Software limit switch mode
+    :type software_limit_mode: int
     """
     message_id = 0x0423
     
@@ -442,24 +533,42 @@ class MGMSG_MOT_SET_LIMSWITCHPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))            
 
 class MGMSG_MOT_REQ_LIMSWITCHPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_LIMSWITCHPARAMS.
+    """See :class:`MGMSG_MOT_SET_LIMSWITCHPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x0424
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_LIMSWITCHPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_LIMSWITCHPARAMS.
+    """See :class:`MGMSG_MOT_SET_LIMSWITCHPARAMS`.
     
-    Fields:
-    - chan_ident
-    - cw_hard_limit
-    - ccw_hard_limit
-    - cw_soft_limit
-    - ccw_soft_limit
-    - software_limit_mode"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param cw_hard_limit: The operation of the Clockwise hardware limit switch when
+        contact is made. If value is OR'd with 0x80, then swap cw_hard_limit and
+        ccw_hard_limit.
+        
+        Values:
+        
+        - 0x01: Ignore switch or switch not present.
+        - 0x02: Switch makes on contact.
+        - 0x03: Switch breaks on contact.
+        - 0x04: Switch makes on contact - only used for homes (e.g. limit switched rotation stages).
+        - 0x05: Switch breaks on contact - only used for homes (e.g. limit switched rotations stages).
+        - 0x06 For PMD based brushless servo controllers only - uses index mark for homing.
+
+    :type cw_hard_limit: int
+    :param ccw_hard_limit: The operation of the Counter Clockwise hardware limit
+        switch when contact is made.
+    :type ccw_hard_limit: int
+    :param cw_soft_limit: Clockwise software limit in position steps. Not applicable to TDC001.
+    :type cw_soft_limit: int
+    :param ccw_soft_limit: Counter Clockwise software limit in position steps. Not applicable to TDC001.
+    :type ccw_soft_limit: int
+    :param software_limit_mode: Software limit switch mode
+    :type software_limit_mode: int"""
     message_id = 0x0425
     
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H', 'H', 'I', 'I', 'H']
@@ -470,16 +579,16 @@ class MGMSG_MOT_MOVE_HOME(MessageWithoutData):
     """Sent to start a home move sequence on the specified motor channel
     (in accordance with the home parameters above).
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0443
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_MOVE_HOMED(MessageWithoutData):
-    """Message sent upon completion of the MGMSG_MOT_MOVE_HOME command.
+    """Message sent upon completion of the :class:`MGMSG_MOT_MOVE_HOME` command.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0444
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
@@ -487,10 +596,10 @@ class MGMSG_MOT_MOVE_RELATIVE_short(MessageWithoutData):
     """This command can be used to start a relative move on the specified
     motor channel (using the relative move distance parameter above).
     The relative distance parameter used for the move will be the parameter sent
-    previously by a MGMSG_MOT_SET_MOVERELPARAMS command.
+    previously by a :class:`MGMSG_MOT_SET_MOVERELPARAMS` command.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0448
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
@@ -498,9 +607,11 @@ class MGMSG_MOT_MOVE_RELATIVE_long(MessageWithData):
     """This command can be used to start a relative move on the specified
     motor channel using the parameter relative_distance parameter.
 
-    Fields:
-    - chan_ident
-    - relative_distance"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param relative_distance: The distance to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type relative_distance: int"""
     
     message_id = 0x0448
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
@@ -509,13 +620,33 @@ class MGMSG_MOT_MOVE_RELATIVE_long(MessageWithData):
     
 
 class MGMSG_MOT_MOVE_COMPLETED(MessageWithData):
-    """Upon completion of a relative or absolute move sequence, the controller
-    sends a MGMSG_MOT_MOVE_COMPLETED message.
+    """Sent by the controller upon completion of a relative or absolute move sequence.
     
-    Fields:
-    - chan_ident
-    - position
-    - status_bits"""
+    The format of this message is the same as the one of
+    :class:`MGMSG_MOT_GET_STATUSUPDATE` or :class:`MGMSG_MOT_GET_DCSTATUSUPDATE`,
+    therefore, only common fields are exported.
+    
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param position: The position encoder count. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type position: int
+    :param status_bits: OR'd value of the following bits:
+        
+        - 0x00000001: forward hardware limit switch is active
+        - 0x00000002: reverse hardware limit switch is active
+        - 0x00000010: in motion, moving forward
+        - 0x00000020: in motion, moving reverse
+        - 0x00000040: in motion, jogging forward
+        - 0x00000080: in motion, jogging reverse
+        - 0x00000200: in motion, homing
+        - 0x00000400: homed (homing has been completed)
+        - 0x00001000: tracking
+        - 0x00002000: settled
+        - 0x00004000: motion error (excessive position error)
+        - 0x01000000: motor current limit reached
+        - 0x80000000: channel is enabled
+    :type status_bits: int"""
     message_id = 0x0464
     #3rd datafield is either EncCount or Velocity + Reserved, depending on the stage type. It's better to ignore it.
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i', 'I', 'I']
@@ -527,10 +658,10 @@ class MGMSG_MOT_MOVE_ABSOLUTE_short(MessageWithoutData):
     """This command can be used to start a absolute move on the specified
     motor channel.
     The absolute move position used for the move will be the parameter sent
-    previously by a MGMSG_MOT_SET_MOVEABSPARAMS command.
+    previously by a :class:`MGMSG_MOT_SET_MOVEABSPARAMS` command.
 
-    Fields:
-    - chan_ident"""    
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""    
     message_id = 0x0453
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
@@ -538,9 +669,11 @@ class MGMSG_MOT_MOVE_ABSOLUTE_long(MessageWithData):
     """This command can be used to start a absolute move on the specified
     motor channel using the parameter absolute_distance parameter.
 
-    Fields:
-    - chan_ident
-    - absolute_distance"""    
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param absolute_position: The absolute position to move. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type absolute_position: int"""
     message_id = 0x0453
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'i']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'absolute_distance']
@@ -550,9 +683,10 @@ class MGMSG_MOT_MOVE_ABSOLUTE_long(MessageWithData):
 class MGMSG_MOT_MOVE_JOG(MessageWithoutData):
     """Sent to start a jog move on the specified motor channel.
     
-    Fields:
-    - chan_ident
-    - direction (0x01=forward, 0x02=reverse)"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param direction: jog direction (0x01=forward, 0x02=reverse)
+    :type direction: int"""
     message_id = 0x046A
     _params_names = ['message_id'] + ['chan_ident', 'direction'] + ['dest', 'source']
 
@@ -564,9 +698,10 @@ class MGMSG_MOT_MOVE_VELOCITY(MessageWithoutData):
     (either StopImmediate or StopProfiled) is called, or a limit switch is
     reached.
     
-    Fields:
-    - chan_ident
-    - direction
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param direction: move direction (0x01=forward, 0x02=reverse)
+    :type direction: int
     """
 
     message_id = 0x0457
@@ -576,19 +711,41 @@ class MGMSG_MOT_MOVE_STOP(MessageWithoutData):
     """Sent to stop any type of motor move (relative, absolute, homing or move
     at velocity) on the specified motor channel.
     
-    Fields:
-    - chan_ident
-    - stop_mode (0x01: immediately, 0x02: controlled (profiled) manner)"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param stop_mode: stop mode (0x01: immediately, 0x02: controlled (profiled) manner)
+    :type stop_mode: int"""
     message_id = 0x0465
     _params_names = ['message_id'] + ['chan_ident', 'stop_mode'] + ['dest', 'source']
 
 class MGMSG_MOT_MOVE_STOPPED(MessageWithData):
     """Upon completion of the stop move, the controller sends this message.
     
-    Fields:
-    - chan_ident
-    - position
-    - status_bits"""
+    The format of this message is the same as the one of
+    :class:`MGMSG_MOT_GET_STATUSUPDATE` or :class:`MGMSG_MOT_GET_DCSTATUSUPDATE`,
+    therefore, only common fields are exported.
+
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param position: The position encoder count. Conversion should be done
+        as in :class:`~thorpy.stages.GenericStage`.
+    :type position: int
+    :param status_bits: OR'd value of the following bits:
+
+        - 0x00000001: forward hardware limit switch is active
+        - 0x00000002: reverse hardware limit switch is active
+        - 0x00000010: in motion, moving forward
+        - 0x00000020: in motion, moving reverse
+        - 0x00000040: in motion, jogging forward
+        - 0x00000080: in motion, jogging reverse
+        - 0x00000200: in motion, homing
+        - 0x00000400: homed (homing has been completed)
+        - 0x00001000: tracking
+        - 0x00002000: settled
+        - 0x00004000: motion error (excessive position error)
+        - 0x01000000: motor current limit reached
+        - 0x80000000: channel is enabled
+    :type status_bits: int"""
     
     message_id = 0x0466
     #3rd datafield is either EncCount or Velocity + Reserved, depending on the stage type. It's better to ignore it.
@@ -599,28 +756,36 @@ class MGMSG_MOT_MOVE_STOPPED(MessageWithData):
 class MGMSG_MOT_SET_BOWINDEX(MessageWithData):
     """Set bow index (see page 63 of the specs).
     
-    Fields:
-    - chan_ident
-    - bow_index"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param bow_index: This parameter is used to set the profile mode to either
+        Trapezoidal or S-curve. A Bow Index of ‘0’ selects a
+        trapezoidal profile. An index value of ‘1’ to ‘18’ selects an S-
+        curve profile.
+    :type bow_index: int"""
     message_id = 0x04F4
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H']
     _params_names = ['message_id', 'data_packet_length', 'dest', 'source'] + ['chan_ident', 'bow_index']
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))            
 
 class MGMSG_MOT_REQ_BOWINDEX(MessageWithoutData):
-    """See MGMSG_MOT_SET_BOWINDEX.
+    """See :class:`MGMSG_MOT_SET_BOWINDEX`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04F5
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_BOWINDEX(MessageWithData):
-    """See MGMSG_MOT_SET_BOWINDEX.
+    """See :class:`MGMSG_MOT_SET_BOWINDEX`.
 
-    Fields:
-    - chan_ident
-    - bow_index"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
+    :param bow_index: This parameter is used to set the profile mode to either
+        Trapezoidal or S-curve. A Bow Index of ‘0’ selects a
+        trapezoidal profile. An index value of ‘1’ to ‘18’ selects an S-
+        curve profile.
+    :type bow_index: int"""
     
     message_id = 0x04F6
     _message_struct_fields = ['H', 'H', 'B', 'B'] + ['H', 'H']
@@ -631,8 +796,8 @@ class MGMSG_MOT_SET_DCPIDPARAMS(MessageWithData):
     """Used to set the position control loop parameters for the specified
     motor channel. See page 66 of the spec.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - proportional
     - integral
     - differential
@@ -645,19 +810,19 @@ class MGMSG_MOT_SET_DCPIDPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_DCPIDPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_GET_DCPIDPARAMS.
+    """See :class:`MGMSG_MOT_GET_DCPIDPARAMS`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     """
     message_id = 0x04A1
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_DCPIDPARAMS(MessageWithData):
-    """See MGMSG_MOT_GET_DCPIDPARAMS.
+    """See :class:`MGMSG_MOT_GET_DCPIDPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - proportional
     - integral
     - differential
@@ -679,8 +844,8 @@ class MGMSG_MOT_SET_AVMODES(MessageWithData):
     indicator modes described below by setting the appropriate value in the
     Mode Bits parameter.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode_bits"""
     message_id = 0x04B3
     
@@ -689,19 +854,19 @@ class MGMSG_MOT_SET_AVMODES(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_AVMODES(MessageWithoutData):
-    """See MGMSG_MOT_SET_AVMODES
+    """See :class:`MGMSG_MOT_SET_AVMODES`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     """
     message_id = 0x04B4
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_AVMODES(MessageWithData):
-    """See MGMSG_MOT_SET_AVMODES
+    """See :class:`MGMSG_MOT_SET_AVMODES`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode_bits"""
     
     message_id = 0x04B5
@@ -715,8 +880,8 @@ class MGMSG_MOT_SET_POTPARAMS(MessageWithData):
     The speed of the motor increases by discrete amounts rather than continuously, as a function of slider deflection. These speed settings are defined by 4 pairs of parameters. Each pair specifies a pot deflection value (in the range 0 to 127) together with an associated velocity (set in encoder counts/sec) to be applied at or beyond that deflection. As each successive deflection is reached by moving the pot slider, the next velocity value is applied. These settings are applicable in either direction of pot deflection, i.e. 4 possible velocity settings in the forward or reverse motion directions.
     Note. The scaling factor between encoder counts and mm/sec depends on the specific stage/actuator being driven.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - zero_wnd
     - vel1
     - wnd1
@@ -732,18 +897,18 @@ class MGMSG_MOT_SET_POTPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))
 
 class MGMSG_MOT_REQ_POTPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_POTPARAMS.
+    """See :class:`MGMSG_MOT_SET_POTPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04B1
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_POTPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_POTPARAMS.
+    """See :class:`MGMSG_MOT_SET_POTPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - zero_wnd
     - vel1
     - wnd1
@@ -761,8 +926,8 @@ class MGMSG_MOT_GET_POTPARAMS(MessageWithData):
 class MGMSG_MOT_SET_BUTTONPARAMS(MessageWithData):
     """The control keypad can be used either to jog the motor, or to perform moves to absolute positions. This function is used to set the front panel button functionality.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode
     - position1
     - position2
@@ -774,19 +939,19 @@ class MGMSG_MOT_SET_BUTTONPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_BUTTONPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_BUTTONPARAMS.
+    """See :class:`MGMSG_MOT_SET_BUTTONPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x04B7
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_BUTTONPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_BUTTONPARAMS.
+    """See :class:`MGMSG_MOT_SET_BUTTONPARAMS`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode
     - position1
     - position2
@@ -804,8 +969,8 @@ class MGMSG_MOT_SET_EEPROMPARAMS(MessageWithData):
     ‘Settings’ button found in the lower right hand corner of the user
     interface).
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - msg_id"""
     
     message_id = 0x04B9
@@ -824,8 +989,8 @@ class MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS(MessageWithData):
     position error, which is then passed through a digital PID-type filter.
     The filtered value is the motor command output.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - kp_pos
     - integral
     - i_lim_pos
@@ -841,18 +1006,18 @@ class MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_PMDPOSITIONLOOPPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04D8
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDPOSITIONLOOPPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDPOSITIONLOOPPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - kp_pos
     - integral
     - i_lim_pos
@@ -871,8 +1036,8 @@ class MGMSG_MOT_GET_PMDPOSITIONLOOPPARAMS(MessageWithData):
 class MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS(MessageWithData):
     """Used to set certain limits that can be applied to the motor drive signal.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - cont_current_lim
     - energy_lim
     - motor_lim
@@ -883,18 +1048,18 @@ class MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))        
 
 class MGMSG_MOT_REQ_PMDMOTOROUTPUTPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04DB
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDMOTOROUTPUTPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDMOTOROUTPUTPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - cont_current_lim
     - energy_lim
     - motor_lim
@@ -915,8 +1080,8 @@ class MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS(MessageWithData):
     
     See page 81 for details.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - time
     - settle_window
     - track_window"""
@@ -926,18 +1091,18 @@ class MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_PMDTRACKSETTLEPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04E1
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDTRACKSETTLEPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDTRACKSETTLEPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - time
     - settle_window
     - track_window"""
@@ -961,8 +1126,8 @@ class MGMSG_MOT_SET_PMDPROFILEMODEPARAMS(MessageWithData):
     been requested. This method is used to set the profile mode to
     either ‘Trapezoidal’ or ‘S-curve’.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode
     - jerk"""
     message_id = 0x04E3
@@ -971,18 +1136,18 @@ class MGMSG_MOT_SET_PMDPROFILEMODEPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))            
 
 class MGMSG_MOT_REQ_PMDPROFILEMODEPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDPROFILEMODEPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDPROFILEMODEPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04E4
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDPROFILEMODEPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDPROFILEMODEPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDPROFILEMODEPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode
     - jerk"""
     message_id = 0x04E5
@@ -999,8 +1164,8 @@ class MGMSG_MOT_SET_PMDJOYSTICKPARAMS(MessageWithData):
     which features both low and high gear modes. This message is used
     to set max velocity and acceleration values for these modes.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - js_gear_low_max_vel
     - js_gear_high_max_vel
     - js_gear_low_accn
@@ -1013,18 +1178,18 @@ class MGMSG_MOT_SET_PMDJOYSTICKPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))                    
 
 class MGMSG_MOT_REQ_PMDJOYSTICKPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDJOYSTICKPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDJOYSTICKPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04E7
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDJOYSTICKPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDJOYSTICKPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDJOYSTICKPARAMS`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - js_gear_low_max_vel
     - js_gear_high_max_vel
     - js_gear_low_accn
@@ -1051,8 +1216,8 @@ class MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS(MessageWithData):
     This method sets various constants and limits for the current
     feedback loop.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - phase
     - kp_current
     - ki_current
@@ -1066,19 +1231,19 @@ class MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))    
 
 class MGMSG_MOT_REQ_PMDCURRENTLOOPPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     
     message_id = 0x04D5
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDCURRENTLOOPPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDCURRENTLOOPPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - phase
     - kp_current
     - ki_current
@@ -1099,8 +1264,8 @@ class MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS(MessageWithData):
     only when the stage is settled, i.e. the Axis Settled status bit (bit 14)
     is set.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - phase
     - kp_settled
     - ki_settled
@@ -1114,18 +1279,18 @@ class MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))            
 
 class MGMSG_MOT_REQ_PMDSETTLEDCURRENTLOOPPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS`.
 
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04EA
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDSETTLEDCURRENTLOOPPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDSETTLEDCURRENTLOOPPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - phase
     - kp_settled
     - ki_settled
@@ -1148,8 +1313,8 @@ class MGMSG_MOT_SET_PMDSTAGEAXISPARAMS(MessageWithData):
     Minimum position value and decrease the Maximum position value,
     thereby reducing the overall travel of the stage.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - stage_id
     - axis_id
     - part_no_axis
@@ -1166,18 +1331,18 @@ class MGMSG_MOT_SET_PMDSTAGEAXISPARAMS(MessageWithData):
     _message_struct = struct.Struct('<' + ''.join(_message_struct_fields))                    
 
 class MGMSG_MOT_REQ_PMDSTAGEAXISPARAMS(MessageWithoutData):
-    """See MGMSG_MOT_SET_PMDSTAGEAXISPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDSTAGEAXISPARAMS`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x04F1
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_PMDSTAGEAXISPARAMS(MessageWithData):
-    """See MGMSG_MOT_SET_PMDSTAGEAXISPARAMS.
+    """See :class:`MGMSG_MOT_SET_PMDSTAGEAXISPARAMS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - stage_id
     - axis_id
     - part_no_axis
@@ -1206,7 +1371,6 @@ class MGMSG_MOT_SET_TSTACTUATORTYPE(MessageWithoutData):
     type. So for example the number stored in the TST for the ZFS25 is
     54613333.
     
-    Fields:
     - actuator_ident"""
     message_id = 0x04FE
     _params_names = ['message_id'] + ['actuator_ident', None] + ['dest', 'source']
@@ -1216,8 +1380,8 @@ class MGMSG_MOT_REQ_STATUSUPDATE(MessageWithoutData):
     This request can be used instead of enabling regular updates as
     described above.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0480
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
@@ -1226,7 +1390,8 @@ class MGMSG_MOT_GET_STATUSUPDATE(MessageWithData):
     specified motor channel. This request can be used instead of
     enabling regular updates as described above.
     
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - position
     - enc_count
     - status_bits"""
@@ -1242,8 +1407,8 @@ class MGMSG_MOT_REQ_DCSTATUSUPDATE(MessageWithoutData):
     This request can be used instead of enabling regular updates as
     described above.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0490
     _params_names = ['message_id'] +['chan_ident', None] + ['dest', 'source']
 
@@ -1252,8 +1417,8 @@ class MGMSG_MOT_GET_DCSTATUSUPDATE(MessageWithData):
     specified motor channel. This request can be used instead of
     enabling regular updates as described above.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - position
     - velocity
     - status_bits"""
@@ -1284,16 +1449,16 @@ class MGMSG_MOT_REQ_STATUSBITS(MessageWithoutData):
     """Used to request a “cut down” version of the status update message,
     only containing the status bits, without data about position and velocity.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0429
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_STATUSBITS(MessageWithData):
-    """See MGMSG_MOT_REQ_STATUSBITS.
+    """See :class:`MGMSG_MOT_REQ_STATUSBITS`.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - status_bits"""
     
     message_id = 0x042A
@@ -1346,25 +1511,25 @@ class MGMSG_MOT_SET_TRIGGER(MessageWithoutData):
     to be synchronized. Multiple moves can then be initiated via a single
     software or hardware trigger command.
 
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode"""
     message_id = 0x0500
     _params_names = ['message_id'] + ['chan_ident', 'mode'] + ['dest', 'source']
 
 class MGMSG_MOT_REQ_TRIGGER(MessageWithoutData):
-    """See MGMSG_MOT_SET_TRIGGER.
+    """See :class:`MGMSG_MOT_SET_TRIGGER`.
     
-    Fields:
-    - chan_ident"""
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int"""
     message_id = 0x0501
     _params_names = ['message_id'] + ['chan_ident', None] + ['dest', 'source']
 
 class MGMSG_MOT_GET_TRIGGER(MessageWithoutData):
-    """See MGMSG_MOT_SET_TRIGGER.
+    """See :class:`MGMSG_MOT_SET_TRIGGER`.
     
-    Fields:
-    - chan_ident
+    :param chan_ident: channel number (0x01, 0x02)
+    :type chan_ident: int
     - mode"""
     message_id = 0x0502
     _params_names = ['message_id'] + ['chan_ident', 'mode'] + ['dest', 'source']
