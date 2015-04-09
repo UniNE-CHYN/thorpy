@@ -21,22 +21,35 @@ def stage_name_from_get_hw_info(m):
         else:
             return 'ZST6(B)'
     elif controller_type in (63, 83):
-        if stage_type == 11:
-            return 'Z806'
-        elif stage_type == 10:
-            return 'Z812'
-        elif stage_type == 9:
-            return 'Z825'
-        elif stage_type == 8:
-            return 'MTS50-Z8'
-        elif stage_type == 7:
-            return 'MTS25-Z8'
-        elif stage_type == 6:
+        #Info obtained from thorlabs technical support
+        if stage_type == 0x01:
+            _print_stage_detection_improve_message(m)
+            return None  #Open circuit - no motor connected.
+        elif stage_type == 0x02:
+            return 'Z706'
+        elif stage_type == 0x03:
+            return 'Z712'
+        elif stage_type == 0x04:
+            return 'Z725'
+        elif stage_type == 0x05:
+            return 'CR1-Z7'
+        elif stage_type == 0x06:
             return 'PRM1-Z8'
-        elif stage_type == 1:
-            #This was made by experiment, by disconnecting the motor
-            return None
+        elif stage_type == 0x07:
+            return 'MTS25-Z8'
+        elif stage_type == 0x08:
+            return 'MTS50-Z8'
+        elif stage_type == 0x09:
+            return 'Z825'
+        elif stage_type == 0x0A:
+            return 'Z812'
+        elif stage_type == 0x0B:
+            return 'Z806'
+        elif stage_type == 0x0C:
+            _print_stage_detection_improve_message(m)
+            return None  #Non Thorlabs motor.
         else:
+            #This is reverse engineered...
             _print_stage_detection_improve_message(m)
             return 'Z606(B)'
     elif controller_type in (43, 93):
