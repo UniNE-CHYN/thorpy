@@ -194,7 +194,7 @@ class GenericStage:
            isinstance(msg, MGMSG_MOT_MOVE_COMPLETED):
             
             self._state_position = msg['position']
-            if not isinstance(msg, MGMSG_MOT_MOVE_COMPLETED):
+            if isinstance(msg, MGMSG_MOT_GET_DCSTATUSUPDATE):
                 self._state_velocity = msg['velocity']
             self._state_status_bits = msg['status_bits']
             return True
@@ -402,7 +402,8 @@ class GenericStage:
     def print_state(self):
         print("Stage: {0}".format(self._name))
         print("Position: {0:0.03f}{1}".format(self.position, self.units))
-        print("Velocity: {0:0.03f}{1}/s".format(self.velocity, self.units))
+        # Velocity information not available with some stages, e.g. LTS300
+        #print("Velocity: {0:0.03f}{1}/s".format(self.velocity, self.units))
         
         flags = []
         if self.status_forward_hardware_limit_switch_active:
