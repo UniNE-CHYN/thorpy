@@ -194,7 +194,7 @@ class GenericStage:
            isinstance(msg, MGMSG_MOT_MOVE_COMPLETED):
             
             self._state_position = msg['position']
-            if not isinstance(msg, MGMSG_MOT_MOVE_COMPLETED):
+            if isinstance(msg, MGMSG_MOT_GET_DCSTATUSUPDATE):
                 self._state_velocity = msg['velocity']
             self._state_status_bits = msg['status_bits']
             return True
