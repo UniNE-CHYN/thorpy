@@ -449,10 +449,16 @@ class GenericStage:
             if not self.status_in_motion_forward and not self.status_in_motion_reverse:
                 self._port.send_message(MGMSG_MOT_MOVE_HOME(chan_ident = self._chan_ident))
             time.sleep(1)
-            
-            
+
         return True
-            
+
+    def home_non_blocking(self, force = True ):
+        if self.status_homed and not force:
+            return True
+        
+        self._port.send_message(MGMSG_MOT_MOVE_HOME(chan_ident = self._chan_ident))     
+        return True
+
     def _wait_for_properties(self, properties, timeout = None, message = None, message_repeat_timeout = None):
         start_time = time.time()
         last_message_time = 0
