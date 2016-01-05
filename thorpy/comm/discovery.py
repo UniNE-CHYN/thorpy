@@ -12,7 +12,7 @@ def discover_stages():
             continue
         
         if platform.system() == 'Linux':
-            port_candidates = [x[0] for x in serial_ports if x[2].get('SNR', None) == dev.serial_number]
+            port_candidates = [x[0] for x in serial_ports if x[2].get('SER', None) == dev.serial_number]
         else:
             raise NotImplementedError("Implement for platform.system()=={0}".format(platform.system()))
         
