@@ -6,6 +6,8 @@ Python library implementing Thorlabs APT communication protocol
 
 ```
 Thorpy - Python library implementing Thorlabs APT communication protocol
+
+Copyright to the code is held by the following parties:
 Copyright (C) 2015 Laurent Fasnacht, University of Neuchâtel
 
 This library is free software; you can redistribute it and/or
