@@ -8,7 +8,10 @@ def discover_stages():
     serial_ports = [(x[0], x[1], dict(y.split('=', 1) for y in x[2].split(' ') if '=' in y)) for x in comports()]
     
     for dev in usb.core.find(find_all=True, custom_match= lambda x: x.bDeviceClass != 9):
-        if dev.manufacturer != 'Thorlabs':
+        try:
+            if dev.manufacturer != 'Thorlabs':
+                continue
+        except usb.core.USBError:
             continue
         
         if platform.system() == 'Linux':
