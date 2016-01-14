@@ -29,7 +29,7 @@ class Port:
             self.send_message(MGMSG_HW_REQ_INFO())
             try:
                 self._info_message = self._recv_message(blocking = True)
-            except:
+            except: # TODO: Be more specific on what we catch here
                 self._buffer = b''
                 #Flush port if needed
                 old_timeout = self._serial.timeout
@@ -67,7 +67,7 @@ class Port:
         with self._lock:
             if self._debug:
                 print('> ', msg)
-            self._serial.write(msg.bytes)
+            self._serial.write(bytes(msg))
             
     @staticmethod
     def run(self):
@@ -187,8 +187,8 @@ class SingleControllerPort(Port):
 
     
     def send_message(self, msg):
-        msg['source'] = 0x01
-        msg['dest'] = 0x50
+        msg.source = 0x01
+        msg.dest = 0x50
         super().send_message(msg)
         
     def _recv_message(self, blocking = False):
@@ -196,8 +196,8 @@ class SingleControllerPort(Port):
         if msg is None:
             return msg
         
-        assert msg['source'] == 0x50
-        assert msg['dest'] == 0x01
+        assert msg.source == 0x50
+        assert msg.dest == 0x01
         return msg
 
     def _handle_message(self, msg):
