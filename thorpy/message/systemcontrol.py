@@ -240,7 +240,7 @@ class MGMSG_RACK_REQ_DIGOUTPUTS(MessageWithoutData):
     message_id = 0x0229
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
 
-class MGMSG_RACK_GET_DIGOUTPUTS:
+class MGMSG_RACK_GET_DIGOUTPUTS(MessageWithoutData):
     """See :class:`MGMSG_RACK_SET_DIGOUTPUTS`."""
     message_id = 0x0230
     _params_names = ['message_id'] + [None, None] + ['dest', 'source']
@@ -265,7 +265,7 @@ class MGMSG_MOD_REQ_DIGOUTPUTS(MessageWithoutData):
     #FIXME: Fix this definition, is bits really required here?
     _params_names = ['message_id'] + ['bits', None] + ['dest', 'source']
 
-class MGMSG_MOD_GET_DIGOUTPUTS:
+class MGMSG_MOD_GET_DIGOUTPUTS(MessageWithoutData):
     """See :class:`MGMSG_MOD_SET_DIGOUTPUTS`.
     
     :param bits:
