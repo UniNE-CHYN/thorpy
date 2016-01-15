@@ -16,14 +16,37 @@ class Port:
         self._lock.acquire()
         self._buffer = b''
         self._unhandled_messages = queue.Queue()
-        self._serial = serial.Serial(port, 115200, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
+        self._serial = serial.Serial(port,
+                                     baudrate=115200,
+                                     bytesize=serial.EIGHTBITS,
+                                     parity=serial.PARITY_NONE,
+                                     stopbits=serial.STOPBITS_ONE,
+                                     rtscts=True)
+
+        # The Thorlabs protocol description recommends toggeling the RTS pin and resetting the
+        # input and output buffer. This makes sense, since the internal controller of the Thorlabs
+        # device does not know what data has reached us of the FTDI RS232 converter.
+        # Similarly, we do not know the state of the controller input buffer.
+        # Be toggling the RTS pin, we let the controller know that it should flush its caches.
+        self._serial.setRTS(1)
+        time.sleep(0.05)
+        self._serial.reset_input_buffer()
+        self._serial.reset_output_buffer()
+        time.sleep(0.05)
+        self._serial.setRTS(0)
+
         self._port = port
         self._debug = False
         
         from ..message import MGMSG_HW_NO_FLASH_PROGRAMMING, MGMSG_HW_REQ_INFO, MGMSG_HW_START_UPDATEMSGS, MGMSG_HW_STOP_UPDATEMSGS
         self.send_message(MGMSG_HW_NO_FLASH_PROGRAMMING(source = 0x01, dest = 0x50))
+
+        # Now that the input buffer of the device is flushed, we can tell it to stop reporting updates and
+        # then flush away any remaining messages.
         self.send_message(MGMSG_HW_STOP_UPDATEMSGS())
-        
+        time.sleep(0.5)
+        self._serial.reset_input_buffer()
+
         self._info_message = None
         while self._info_message is None:
             self.send_message(MGMSG_HW_REQ_INFO())
@@ -31,11 +54,7 @@ class Port:
                 self._info_message = self._recv_message(blocking = True)
             except: # TODO: Be more specific on what we catch here
                 self._buffer = b''
-                #Flush port if needed
-                old_timeout = self._serial.timeout
-                self._serial.setTimeout(1)
-                self._serial.read(1024)
-                self._serial.setTimeout(old_timeout)                
+                self._serial.flushInput()
                 
         self._serial_number = int(sn)
         if self._serial_number is None:
