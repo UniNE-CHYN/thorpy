@@ -20,7 +20,7 @@ def stage_name_from_get_hw_info(m):
             return 'HS ZST6(B)'
         else:
             return 'ZST6(B)'
-    elif controller_type in (63, 83):
+    elif controller_type in (27, 63, 83):
         #Info obtained from thorlabs technical support
         if stage_type == 0x01:
             _print_stage_detection_improve_message(m)
