@@ -215,8 +215,8 @@ class SingleControllerPort(Port):
         if msg is None:
             return msg
         
-        assert msg.source == 0x50
-        assert msg.dest == 0x01
+        #assert msg.source == 0x50
+        #assert msg.dest == 0x01
         return msg
 
     def _handle_message(self, msg):
