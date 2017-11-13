@@ -61,7 +61,7 @@ class Message:
     def dest(self, destination_id):
         if destination_id is not None:
             assert isinstance(destination_id, int)
-            assert 0 < destination_id < 0x80
+            assert 0 <= destination_id <= 0x80
         self._dest = destination_id
 
     @property
@@ -72,7 +72,7 @@ class Message:
     def source(self, source_id):
         if source_id is not None:
             assert isinstance(source_id, int)
-            assert 0 < source_id < 0x80
+            assert 0 <= source_id <= 0x80
         self._source = source_id
 
     @classproperty
