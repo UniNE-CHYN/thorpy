@@ -12,7 +12,8 @@ def discover_stages():
             #FIXME: this avoids an error related to https://github.com/walac/pyusb/issues/139
             #FIXME: this could maybe be solved in a better way?
             dev._langids = (1033, )
-            if dev.manufacturer != 'Thorlabs':
+            # KDC101 3-port is recognized as FTDI in newer kernels
+            if not (dev.manufacturer == 'Thorlabs' or dev.manufacturer == 'FTDI'):
                 continue
         except usb.core.USBError:
             continue
