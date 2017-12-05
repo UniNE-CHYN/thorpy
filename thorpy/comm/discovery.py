@@ -31,7 +31,7 @@ def discover_stages():
             yield stage
         
 if __name__ == '__main__':
-    print(list(discover()))
+    print(list(discover_stages()))
     
 
 #iManufacturer           1 Thorlabs
