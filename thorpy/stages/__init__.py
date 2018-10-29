@@ -85,6 +85,8 @@ def stage_name_from_get_hw_info(m):
         else:
             _print_stage_detection_improve_message(m)
             return 'DDSM100'
+    elif controller_type in (26,):
+        return 'KST101'
     else:
         _print_stage_detection_improve_message(m)
         return None
