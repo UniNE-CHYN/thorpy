@@ -164,7 +164,7 @@ class GenericStage:
         
         self._port.send_message(MGMSG_MOD_SET_CHANENABLESTATE(chan_ident = self._chan_ident, chan_enable_state = 0x01))
         
-        print("Constructed: {0!r}".format(self))
+        print("Test: "+"Constructed: {0!r}".format(self))
         
         #STATUSUPDATE
         self._state_position = None
@@ -474,7 +474,18 @@ class GenericStage:
         
     def __repr__(self):
         return '<{0} on {1!r} channel {2}>'.format(self._name, self._port, self._chan_ident)
-        
+ 
+
+    def identify(self):
+        self._port.send_message(MGMSG_MOD_IDENTIFY())
+
+    def move_jog_forward(self):
+        self._port.send_message(MGMSG_MOT_MOVE_JOG(chan_ident = self._chan_ident, direction = 0x01))
+
+    def move_jog_backward(self):
+        self._port.send_message(MGMSG_MOT_MOVE_JOG(chan_ident = self._chan_ident, direction = 0x02))
+
+       
 
 #Message which should maybe be implemented?
 #Should be in port: MGMSG_HUB_REQ_BAYUSED, MGMSG_HUB_GET_BAYUSED,
