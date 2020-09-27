@@ -15,6 +15,7 @@ def stage_name_from_get_hw_info(m):
     stage_type = m['empty_space'][-2]  #Reverse engineered
     hw_version = m['hw_version']
     model_number = m['model_number'].decode('ascii').strip('\x00')
+    mod_state=m['mod_state']        # new version 2019, required for controller_type 26, 4294
     if controller_type in (60, 80):
         if hw_version == 3:
             return 'HS ZST6(B)'
@@ -52,6 +53,42 @@ def stage_name_from_get_hw_info(m):
             #This is reverse engineered...
             _print_stage_detection_improve_message(m)
             return 'Z606(B)'
+    elif controller_type in (26, 4294, ):
+        #Obtained by testing out all the options of a Thorlabs KST101. Until now only verified for ZST225(B), ZST213(B) and ZFS25.
+        if mod_state == 115:
+            return 'PLS3'
+        elif mod_state == 114:
+            return 'PLS2'
+        elif mod_state == 117:
+            return 'FW103'
+        elif mod_state == 112:
+            return 'NR360'
+        elif mod_state == 81:
+            return 'DRV014'
+        elif mod_state == 80:
+            return 'DRV013'        
+        elif mod_state == 66:
+            return 'ZFS25(B)'
+        elif mod_state == 65:
+            return 'ZFS13(B)'
+        elif mod_state == 64:
+            return 'ZFS6(B)'
+        elif mod_state == 50:
+            return 'ZST225(B)'
+        elif mod_state == 49:
+            return 'ZST213(B)'
+        elif mod_state == 48:
+            return 'ZST206(B)'
+        elif mod_state == 34:
+            return 'ZST25(B)'
+        elif mod_state == 33:
+            return 'ZST13(B)'
+        elif mod_state == 32:
+            return 'ZST6(B)'
+        else:
+            #This is reverse engineered...
+            _print_stage_detection_improve_message(m)
+            return 'Z606(B)'
     elif controller_type in (43, 93):
         return 'DRV414'
     elif controller_type in (94, ):
@@ -85,8 +122,6 @@ def stage_name_from_get_hw_info(m):
         else:
             _print_stage_detection_improve_message(m)
             return 'DDSM100'
-    elif controller_type in (26,):
-        return 'KST101'
     else:
         _print_stage_detection_improve_message(m)
         return None
