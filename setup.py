@@ -6,7 +6,7 @@ except ImportError:
 setup(name="thorpy",
       version="0.0.0",
       description="",
-      packages = ['thorpy', 'thorpy.comm', 'thorpy.message', 'thorpy.stages'],
+      packages = ['thorpy', 'thorpy.comm', 'thorpy.message', 'thorpy.stages','thorpy.flipmount'],
       package_data = {'thorpy.stages': ['*.ini']},
       include_package_data = True,
       zip_safe = True,
