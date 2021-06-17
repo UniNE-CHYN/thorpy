@@ -10,8 +10,12 @@ def _print_stage_detection_improve_message(m):
           '- stage type\n' + \
           '- this data: {0}'.format(m), file = sys.stderr)
 
-def stage_name_from_get_hw_info(m):
-    controller_type = m['serial_number'] // 1000000  #v7
+def stage_name_from_get_hw_info(m, sn=None):
+    if sn is None:
+        controller_type = m['serial_number'] // 1000000  #v7
+    else:
+        controller_type = int(sn) // 1000000  #v7
+
     stage_type = m['empty_space'][-2]  #Reverse engineered
     hw_version = m['hw_version']
     model_number = m['model_number'].decode('ascii').strip('\x00')
