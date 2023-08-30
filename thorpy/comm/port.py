@@ -55,7 +55,9 @@ class Port:
             except: # TODO: Be more specific on what we catch here
                 self._buffer = b''
                 self._serial.flushInput()
-                
+#        print(self._info_message['serial_number'])
+#        self._info_message.__serial_number = sn
+#        print(self._info_message)
         self._serial_number = int(sn)
         if self._serial_number is None:
             self._serial_number = self._info_message['serial_number']
@@ -244,7 +246,7 @@ class SingleControllerPort(Port):
         ret = dict([(k, self._stages.get(k, None)) for k in only_chan_idents])
         for k in only_chan_idents:
             if ret[k] is None:
-                ret[k] = GenericStage(self, 0x01, stage_name_from_get_hw_info(self._info_message))
+                ret[k] = GenericStage(self, 0x01, stage_name_from_get_hw_info(self._info_message, self._serial_number))
                 self._stages[k] = ret[k]
                 
         return ret

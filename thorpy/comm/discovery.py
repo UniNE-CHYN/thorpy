@@ -1,4 +1,4 @@
-def discover_stages():
+def discover_stages(serial_number):
     import usb
     import os
     from .port import Port
@@ -9,28 +9,33 @@ def discover_stages():
     
     for dev in usb.core.find(find_all=True, custom_match= lambda x: x.bDeviceClass != 9):
         try:
+
             #FIXME: this avoids an error related to https://github.com/walac/pyusb/issues/139
             #FIXME: this could maybe be solved in a better way?
             dev._langids = (1033, )
             # KDC101 3-port is recognized as FTDI in newer kernels
-            if not (dev.manufacturer == 'Thorlabs' or dev.manufacturer == 'FTDI'):
+            #check if device is a thorlabs product excluding the thorlabs powermeter
+            if not (dev.manufacturer == 'Thorlabs' or dev.manufacturer == 'FTDI') or ('pm' in dev.product.lower()):
                 continue
         except usb.core.USBError:
             continue
+        if str(dev.serial_number) == serial_number:        
+            if platform.system() == 'Linux':
+                port_candidates = [x[0] for x in serial_ports if x[2].get('SER', None) == dev.serial_number]
+            else:
+                raise NotImplementedError("Implement for platform.system()=={0}".format(platform.system()))
         
-        if platform.system() == 'Linux':
-            port_candidates = [x[0] for x in serial_ports if x[2].get('SER', None) == dev.serial_number]
-        else:
-            raise NotImplementedError("Implement for platform.system()=={0}".format(platform.system()))
-        
-        assert len(port_candidates) == 1
-        
-        port = port_candidates[0]
+            assert len(port_candidates) == 1
+            
+            port = port_candidates[0]
 
-        p = Port.create(port, dev.serial_number)
-        for stage in p.get_stages().values():
-            yield stage
-        
+            p = Port.create(port, dev.serial_number)
+            for stage in p.get_stages().values():
+                return stage
+            
+    raise NotImplementedError("Device not found with serial number: " + serial_number)   
+    return 0
+
 if __name__ == '__main__':
     print(list(discover_stages()))
     
